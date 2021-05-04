@@ -1,0 +1,37 @@
+int distancia = 0;//un int almacena un valor de 16-bit 
+
+long readUltrasonicDistance(int triggerPin, int echoPin)//variable de almacenamiento extendido
+{
+  pinMode(triggerPin, OUTPUT);  // Clear the trigger
+  digitalWrite(triggerPin, LOW);//permite escribir varios valores logicos digitales 
+  delayMicroseconds(2);//funcion que hace que espere
+  // Sets the trigger pin to HIGH state for 10 microseconds
+  digitalWrite(triggerPin, HIGH);//permite escribir varios valores logicos digitales
+  delayMicroseconds(10);//funcion que hace que espere 10 segundos
+  digitalWrite(triggerPin, LOW);//permite escribir varios valores logicos digitales
+  pinMode(echoPin, INPUT);//configura un pin como salida
+  // Reads the echo pin, and returns the sound wave travel time in microseconds
+  return pulseIn(echoPin, HIGH);
+}
+
+void setup()// //Iniciamos la comunicación serial
+{
+  Serial.begin(9600);
+
+  pinMode(1, OUTPUT);//se define elpin 1 como salida 
+  pinMode(2, OUTPUT);//se define el pin 2 como salida
+}
+
+void loop()//// aca van los comandos de la subrutina
+{
+  distancia = 0.01723 * readUltrasonicDistance(0, 0);//se establece una variable distancia
+  Serial.println(distancia);
+  if (distancia < 150) {//si la distancia es menor a 150
+    digitalWrite(1, HIGH);//se define el pin 1 en alta
+    tone(2, 92, 10000); // play tone 30 (F#2 = 92 Hz)//se define el tono del parlante 
+  } else {//si no 
+    digitalWrite(1, LOW);//se define el pin 1 en baja
+    noTone(2);
+  }
+  delay(10); // Delay a little bit to improve simulation performance//esperar 10 segundos
+}
